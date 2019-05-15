@@ -1,6 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import App from './OldApp';
 import Enzyme, { shallow } from 'enzyme';
 import EnzymeAdapter from 'enzyme-adapter-react-16';
 Enzyme.configure({
@@ -36,7 +35,7 @@ describe('Test for increment counter', () => {
     expect(renderComp.length).toBe(1);
   });
 
-  test('test render of button', () => {
+  test('test render of increment button', () => {
     const wrapper = setup();
     const renderComp = findByAttribute(wrapper, 'counter-button');
     expect(renderComp.length).toBe(1);
@@ -62,6 +61,47 @@ describe('Test for increment counter', () => {
     const updateCounter=findByAttribute(wrapper, 'counter-view');
     expect(updateCounter.text()).toContain(counter+1);
   })
+
+
+  test('test render of decrement button', () => {
+    const wrapper = setup();
+    const renderComp = findByAttribute(wrapper, 'decrement-counter-button');
+    expect(renderComp.length).toBe(1);
+  });
+
+  test('test check decrement of counter', () => {
+    const counter = 7;
+    const wrapper = setup(null, { counter });
+    const button = findByAttribute(wrapper, 'decrement-counter-button');
+    button.simulate('click');
+    const updateCounter=findByAttribute(wrapper, 'counter-view');
+    expect(updateCounter.text()).toContain(counter-1);
+  })
+
+  test('error does not show when not needed', () => {
+    const wrapper = setup();
+    const errorView = findByAttribute(wrapper, 'test-error-view');
+    expect(errorView.length).toBe(0);
+  });
+
+  test('decrement is clicked when counter is 0', () => {
+    const counter = 0;
+    const wrapper = setup(null, { counter });
+
+    const button = findByAttribute(wrapper, 'decrement-counter-button');
+    button.simulate('click');
+    let updateCounter=findByAttribute(wrapper, 'counter-view');
+    expect(updateCounter.text()).toContain(0);
+    let errorView = findByAttribute(wrapper, 'test-error-view');
+    expect(errorView.length).toBe(1);
+
+    const incrementButton = findByAttribute(wrapper, 'counter-button');
+    incrementButton.simulate('click');
+    updateCounter=findByAttribute(wrapper, 'counter-view');
+    expect(updateCounter.text()).toContain(counter+1);
+    errorView = findByAttribute(wrapper, 'test-error-view');
+    expect(errorView.length).toBe(0);
+  });
 
 })
 
