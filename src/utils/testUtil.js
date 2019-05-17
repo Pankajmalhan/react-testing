@@ -1,6 +1,8 @@
 import checkPropTypes from 'check-prop-types';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import rootReducer from '../reducers/index';
+import ReduxThunk from 'redux-thunk';
+import { middlewares } from "../configureStore";
 /**
  * Return node(s) with the given data-test attribute.
  * @param {ShallowWrapper} wrapper - Enzyme shallow wrapper.
@@ -33,5 +35,12 @@ export const checkProps = (component, conformingProps) => {
 * @returns {Store} - Redux store.
 */
 export const storeFactory = (initialState) => {
-  return createStore(rootReducer, initialState);
+  return createStore(
+    rootReducer,
+    initialState,
+    compose(
+      applyMiddleware(ReduxThunk),
+      window.devToolsExtension ? window.devToolsExtension() : f => f
+    ),
+  );
 }
