@@ -3,12 +3,12 @@ import Congrats from './Congrats';
 import Enzyme, { shallow } from 'enzyme';
 import EnzymeAdapter from 'enzyme-adapter-react-16';
 import { findByTestAttr,checkProps } from '../utils/testUtil';
-import checkPropTypes from 'check-prop-types';
 
 Enzyme.configure({
     adapter: new EnzymeAdapter()
 });
 
+const defaultProps={ success: false }
 /**
  * Factory function create and return the shallow warpper for Congrats component
  * @function setup
@@ -17,7 +17,7 @@ Enzyme.configure({
  * @returns {shallowRapper}
  */
 const setup = (props = {}, state = null) => {
-    const wrapper = shallow(<Congrats {...props} />);
+    const wrapper = shallow(<Congrats {...defaultProps} {...props} />);
     if (state) wrapper.setState(state)
     return wrapper
 }
